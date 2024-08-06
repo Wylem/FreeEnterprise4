@@ -194,3 +194,47 @@ msfpatch {
         inc $9f
         rtl
 }
+
+
+// faster lower dialog item selection
+
+// reduce frame delay after button presses (default 7)
+// going too low may make up/down inputs too fast when
+// cursor is one line away from scrolling
+patch ($00ae63 bus) { 03 }
+
+// speed up scrolling
+msfpatch {
+    .addr $00ae75
+        jsl $=Menu__Scrolling_Speed_ItemSelectUp
+    .addr $00ae85
+        jsl $=Menu__Scrolling_Speed_ItemSelectDown
+
+    [00ae6f] = 0x04
+    [00ae7f] = 0x04
+
+    .new
+    Menu__Scrolling_Speed_ItemSelectUp:
+        dec $bb
+        dec $bb
+        dec $bb
+        dec $bb
+        rtl
+
+    Menu__Scrolling_Speed_ItemSelectDown:
+        inc $bb
+        inc $bb
+        inc $bb
+        inc $bb
+        rtl
+}
+
+
+// check joypad 'repeat' instead of 'press' for left and right
+msfpatch {
+    .addr $00ad90
+        lda $01  // for d-pad right
+
+    .addr $00adb0
+        lda $01  // for d-pad left
+}
