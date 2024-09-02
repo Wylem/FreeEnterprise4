@@ -520,7 +520,6 @@ class FlagLogicCore:
 
         challenges = flagset.get_list(r'^-wacky:')
         if challenges:
-            print(challenges)
             # Simplified wacky compatibility logic
             # If one of these is set, none of the others in this group can be
             WACKY_SET_1 = ['afflicted', 'menarepigs', 'mirrormirror', 'skywarriors', 'zombies']
@@ -539,7 +538,6 @@ class FlagLogicCore:
                 mode = self._lib.re_sub(r'-wacky:', '', c)
                 print(f'mode is {mode}')
                 if mode in WACKY_SET_1:
-                    disable = [fr'-wacky:{m}' for m in WACKY_SET_1 if m != mode]
                     self._simple_disable(flagset, log, 'Can only have one enforced status wacky mode', [fr'-wacky:{m}' for m in WACKY_SET_1 if m != mode])
                     self._simple_disable(flagset, log, 'Modes are incompatible with enforced status wacky modes', [fr'-wacky:{m}' for m in WACKY_SET_2])
                 for group in WACKY_SET_3:
