@@ -1,4 +1,4 @@
-from . import lark
+import lark
 from . import consts
 import os
 
@@ -24,7 +24,7 @@ def get_parser(name, start='start'):
         with open(os.path.join(_grammar_path, 'grammar_{}.lark').format(name), 'r') as infile:
             grammar = infile.read()
 
-        _parsers[key] = lark.Lark(grammar + _common_grammar, start=start)
+        _parsers[key] = lark.Lark(grammar + _common_grammar, parser='lalr', start=start, maybe_placeholders=False)
 
     return _parsers[key]
 
