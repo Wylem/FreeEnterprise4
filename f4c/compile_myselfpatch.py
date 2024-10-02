@@ -53,7 +53,7 @@ def _load_parser():
     global _msf_parser
     if _msf_parser is None:
         with open(os.path.join(os.path.dirname(__file__), "grammar_myselfpatch.lark"), 'r') as infile:
-            _msf_parser = lark.Lark(infile.read(), parser='lalr', maybe_placeholders=False)
+            _msf_parser = lark.Lark(infile.read(), maybe_placeholders=False)
 
     global _expr_transformer
     if _expr_transformer is None:
