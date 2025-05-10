@@ -2,7 +2,7 @@ import re
 import json
 import math
 import pickle
-import f4c.lark
+import lark
 
 import version
 
@@ -26,7 +26,7 @@ CONDITIONAL_GRAMMAR = '''
               | regex
 
     flag      : /[A-Z-][a-z0-9_]*:?[a-z0-9_]*/
-    regex     : "/" /[^\/]*/ "/" regex_scope?
+    regex     : "/" /[^\/]+/ "/" regex_scope?
     !regex_scope : "any"
                  | "all"
 
@@ -38,7 +38,7 @@ CONDITIONAL_GRAMMAR = '''
     %ignore WS
 '''
 
-class ConditionalTransformer(f4c.lark.Transformer):
+class ConditionalTransformer(lark.Transformer):
     def flag(self, n):
         f = str(n[0])
         if f not in flag_order:
@@ -128,7 +128,7 @@ for line in sections['SPEC']:
 
 #--------------------------------------------
 
-implicit_parser = f4c.lark.Lark(CONDITIONAL_GRAMMAR, start='implicit')
+implicit_parser = lark.Lark(CONDITIONAL_GRAMMAR, start='implicit')
 transformer = ConditionalTransformer()
 for line in sections['IMPLICIT']:
     line = line.strip()
@@ -136,7 +136,7 @@ for line in sections['IMPLICIT']:
         continue
     try:
         tree = implicit_parser.parse(line)
-    except f4c.lark.common.ParseError:
+    except lark.common.ParseError:
         raise Exception(f"Error parsing implicit flag spec: {line}")
     tree = transformer.transform(tree)
     flag_implicit[tree.children[0]] = tree.children[1]
