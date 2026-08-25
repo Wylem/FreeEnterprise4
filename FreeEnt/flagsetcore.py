@@ -40,6 +40,7 @@ class FlagSetCore:
             self._load_binary(flag_string)
         else:
             self._load_text(flag_string)
+            self.validate()
 
     def _load_text(self, flag_string):
         self._flags = {}
@@ -112,6 +113,11 @@ class FlagSetCore:
 
             if value == flag_binary_info['value']:
                 self.set(flag_binary_info['flag'])
+
+    def validate(self):
+        for flag in self._flags:
+            if flag not in self._flagspec['order']:
+                raise Exception(f"Invalid flag: {flag}")
 
     def get_list(self, regex=None):
         flags = []
